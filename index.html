@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>កិច្ចការស្រាវជ្រាវភាសាអង់គ្លេស - លំហាត់</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&display=swap');
+        
+        body { font-family: 'Battambang', Arial, sans-serif; background-color: #f3f4f6; }
+        .en-font { font-family: Arial, sans-serif; }
+        .cloud-box {
+            border: 3px solid #63b3ed;
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+            background: white;
+            box-shadow: inset 0 0 10px rgba(99, 179, 237, 0.2);
+        }
+        @media print {
+            body { background-color: white; }
+            .no-print { display: none !important; }
+            .main-container { box-shadow: none; border: none; padding: 0; margin: 0; max-width: 100%; }
+            input[type="text"], textarea { border: none !important; border-bottom: 1px dashed black !important; background: transparent !important; }
+        }
+        
+        /* Teacher Mode Styling */
+        .teacher-mode-active input:disabled, .teacher-mode-active textarea:disabled {
+            background-color: #fefce8 !important; /* light yellow */
+            color: #b91c1c !important; /* red */
+            opacity: 1;
+        }
+        
+        /* Teacher sub-score boxes (Hidden by default, shown in teacher mode) */
+        .teacher-score-box { display: none; }
+        .teacher-mode-active .teacher-score-box { display: flex !important; }
+    </style>
+</head>
+<body class="p-4 md:p-8 text-gray-800">
+
+    <div class="main-container max-w-4xl mx-auto bg-white p-6 md:p-10 rounded-xl shadow-lg border-t-[12px] border-green-600 relative">
+        
+        <button onclick="window.openTeacherLogin()" class="no-print absolute top-4 right-4 text-gray-400 hover:text-blue-600 transition flex items-center gap-1 text-sm font-bold">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+            ផ្ទាំងគ្រូបង្រៀន
+        </button>
+
+        <div id="assignmentContainer">
+            <header class="flex flex-col md:flex-row justify-between items-center md:items-end border-b-2 border-gray-200 pb-6 mb-8 gap-6 mt-4 md:mt-0">
+                <div class="w-48 flex justify-center md:justify-start">
+                    <img src="https://yt3.googleusercontent.com/ytc/AIdro_nrQn5GkH_E4A-e1t9eH5b01kZ7H-8h4-Zg9j5tQyI4QWM=s900-c-k-c0x00ffffff-no-rj" alt="Sovannaphumi School Logo" class="max-h-24 object-contain" onerror="this.outerHTML='<div class=\'text-center border-2 border-blue-900 p-2 rounded-lg\'><h1 class=\'font-bold text-blue-900 text-[16px]\'>សាលារៀនសុវណ្ណភូមិ</h1><h2 class=\'text-red-600 text-[10px] font-bold\'>SOVANNAPHUMI SCHOOL</h2></div>'">
+                </div>
+                
+                <div class="w-full md:w-1/2 space-y-4">
+                    <div class="flex items-end">
+                        <label class="font-bold text-gray-700 w-24 text-lg">ឈ្មោះសិស្ស៖</label>
+                        <input type="text" id="studentName" class="flex-1 border-b-2 border-dotted border-gray-500 bg-transparent outline-none px-2 py-1 text-blue-700 font-bold focus:border-blue-500" placeholder="សូមបញ្ចូលឈ្មោះ...">
+                    </div>
+                    <div class="flex items-end">
+                        <label class="font-bold text-gray-700 w-24 text-lg">ថ្នាក់ទី៖</label>
+                        <input type="text" id="studentClass" class="flex-1 border-b-2 border-dotted border-gray-500 bg-transparent outline-none px-2 py-1 text-blue-700 font-bold focus:border-blue-500" placeholder="សូមបញ្ចូលថ្នាក់...">
+                    </div>
+                </div>
+            </header>
+
+            <main class="en-font">
+                <div class="flex items-start md:items-center gap-4 mb-6 relative">
+                    <div class="w-10 h-10 rounded-full border-4 border-[#14b8a6] flex items-center justify-center font-bold text-[#14b8a6] text-xl shrink-0">2</div>
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-900">A. Put the words in the right column.</h2>
+                    <div class="teacher-score-box ml-auto flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-lg border border-yellow-300 no-print">
+                        <label class="text-sm font-bold text-gray-700 font-['Battambang']">ពិន្ទុ៖</label>
+                        <input type="number" class="teacher-sub-score w-16 border rounded text-center font-bold text-blue-700 outline-none p-1" data-ex="ex2a" oninput="window.calculateTotalScore()" placeholder="0">
+                        <span class="text-xs font-bold text-gray-500">/ 14</span>
+                    </div>
+                </div>
+                <div class="cloud-box p-8 mb-10 text-center leading-[3rem]">
+                    <span class="text-[#f27457] text-2xl mx-3 font-serif italic">bus station</span>
+                    <span class="text-[#e6007e] text-xl mx-3 font-bold uppercase italic">supermarket</span>
+                    <span class="text-red-600 text-3xl mx-3 font-black">river</span>
+                    <span class="text-[#007cc3] text-2xl mx-3">desert</span>
+                    <span class="text-red-500 text-4xl mx-3 font-light">lake</span>
+                    <br class="hidden md:block">
+                    <span class="text-red-600 text-3xl mx-3">forest</span>
+                    <span class="text-[#a48e24] text-xl mx-3 font-bold uppercase tracking-widest" style="font-family: 'Courier New', Courier, monospace;">post office</span>
+                    <span class="text-green-500 text-2xl mx-3">drought</span>
+                    <span class="text-[#2b3990] text-3xl mx-3 font-bold">volcano</span>
+                    <span class="text-purple-600 text-2xl mx-3">hospital</span>
+                    <br class="hidden md:block">
+                    <span class="text-[#2b3990] text-3xl mx-3 font-bold italic">flood</span>
+                    <span class="text-black text-3xl mx-3 font-black">earthquake</span>
+                    <span class="text-[#00a0e9] text-3xl mx-3 font-bold uppercase" style="font-family: Impact, sans-serif;">mountain</span>
+                    <span class="text-gray-700 text-3xl mx-3 font-bold">museum</span>
+                    <span class="text-[#ed008c] text-2xl mx-3 font-bold">forest fires</span>
+                </div>
+                <div class="overflow-x-auto rounded-lg mb-14">
+                    <table class="w-full border-collapse border-2 border-black text-center min-w-[600px]">
+                        <thead>
+                            <tr>
+                                <th class="border-2 border-black p-4 bg-[#f4f5e8] font-bold text-xl w-1/3">disasters</th>
+                                <th class="border-2 border-black p-4 bg-[#fde8e9] font-bold text-xl w-1/3">places in a town</th>
+                                <th class="border-2 border-black p-4 bg-[#d8ebf3] font-bold text-xl w-1/3">natural places</th>
+                            </tr>
+                        </thead>
+                        <tbody id="exerciseTable">
+                            <tr>
+                                <td class="border-2 border-black p-0 h-12 relative"><input type="text" class="w-full h-full p-2 outline-none italic text-gray-600 bg-gray-100 text-center" value="Example: earthquake" readonly></td>
+                                <td class="border-2 border-black p-0 h-12 relative"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                                <td class="border-2 border-black p-0 h-12 relative"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                            </tr>
+                            <tr>
+                                <td class="border-2 border-black p-0 h-12"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                                <td class="border-2 border-black p-0 h-12"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                                <td class="border-2 border-black p-0 h-12"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                            </tr>
+                            <tr>
+                                <td class="border-2 border-black p-0 h-12"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                                <td class="border-2 border-black p-0 h-12"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                                <td class="border-2 border-black p-0 h-12"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                            </tr>
+                            <tr>
+                                <td class="border-2 border-black p-0 h-12"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                                <td class="border-2 border-black p-0 h-12"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                                <td class="border-2 border-black p-0 h-12"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                            </tr>
+                            <tr>
+                                <td class="border-2 border-black p-0 h-12"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                                <td class="border-2 border-black p-0 h-12"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                                <td class="border-2 border-black p-0 h-12"><input type="text" class="w-full h-full p-2 outline-none text-center text-blue-800 font-bold focus:bg-yellow-50"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mb-14">
+                    <div class="flex items-start md:items-center gap-4 mb-6 relative">
+                        <div class="w-10 h-10 rounded-full border-4 border-[#14b8a6] flex items-center justify-center font-bold text-[#14b8a6] text-xl shrink-0">3</div>
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 leading-snug w-3/4">A. Read a text about Tim. He is sharing his holiday and adventure experience with his classmates. Fill the gaps with correct tense of the verbs. Past simple or present perfect?</h2>
+                        <div class="teacher-score-box absolute right-0 top-0 flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-lg border border-yellow-300 no-print">
+                            <label class="text-sm font-bold text-gray-700 font-['Battambang']">ពិន្ទុ៖</label>
+                            <input type="number" class="teacher-sub-score w-16 border rounded text-center font-bold text-blue-700 outline-none p-1" data-ex="ex3a" oninput="window.calculateTotalScore()" placeholder="0">
+                            <span class="text-xs font-bold text-gray-500">/ 15</span>
+                        </div>
+                    </div>
+                    <div class="bg-[#fceaf0] p-6 md:p-8 rounded-xl text-lg leading-[2.5rem] text-gray-800 shadow-sm border border-pink-200">
+                        Good morning everyone. Today I'm sharing all my holiday experiences with you and some of the things that I think are adventurous! Last August, I <span class="underline decoration-2 font-bold">went</span> (go) to see my grandparents and uncle in the U.K. 
+                        We 1. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (stay) there for two weeks. 
+                        The weather 2. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (be) lovely because it was summer. 
+                        My sister and I 3. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (do) a lot of fun things with our grandparents such as swimming, riding bicycles, and eating a lot of seafood! 
+                        Then we 4. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (visit) our uncle in London and he 
+                        5. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (take) us to the Children's Museum to see a show. 
+                        It is the best show I 6. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (see) in my life! 
+                        Even though we had a great time, I don't think that holiday was adventurous. In the last few weeks, our family and our friend's family 
+                        7. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (go) camping in Mondulkiri together. 
+                        We 8. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (have) so much fun camping and exploring Mondulkiri. 
+                        Since we moved to Cambodia, our family 9. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (hear) only great things about Mondulkiri. 
+                        I 10. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (go) on camping trips before, but not in Cambodia, so I was excited. 
+                        In Mondulkiri, we 11. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (go) hiking and 
+                        12. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (get) lost for hours. 
+                        The worst thing was there was hardly any phone signal. My friend, Kosal, and I were pretty scared, but our fathers 
+                        13. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (tell) us to calm down. 
+                        I 14. <input type="text" class="w-32 md:w-40 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (never be) lost in a forest before, so I didn't really know what to do. 
+                        Luckily, after searching and searching, Kosal finally 15. <input type="text" class="w-24 md:w-32 border-b-2 border-gray-400 bg-transparent px-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold"> (get) a signal on his phone to use Google Maps and we found our way out to the nearest road!
+                    </div>
+                </div>
+
+                <div class="mb-14">
+                    <div class="flex items-start md:items-center gap-4 mb-6 relative">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 leading-snug w-3/4">B. Read the text again and answer the questions in sentences. Write the answers in your notebook.</h2>
+                        <div class="teacher-score-box absolute right-0 top-0 flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-lg border border-yellow-300 no-print">
+                            <label class="text-sm font-bold text-gray-700 font-['Battambang']">ពិន្ទុ៖</label>
+                            <input type="number" class="teacher-sub-score w-16 border rounded text-center font-bold text-blue-700 outline-none p-1" data-ex="ex3b" oninput="window.calculateTotalScore()" placeholder="0">
+                            <span class="text-xs font-bold text-gray-500">/ 30</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 md:p-8 rounded-xl border-2 border-gray-200 shadow-sm space-y-6">
+                        <div class="mb-4 text-lg">
+                            <span class="font-bold text-black">Example:</span> <span class="italic text-gray-700">Where did Tim go last August?</span>
+                            <span class="text-blue-700 font-bold italic ml-2">Tim went to the U.K.</span>
+                        </div>
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-gray-800 mb-2 text-lg">1. How long did they stay in the U.K?</label>
+                                <input type="text" class="w-full border-b-2 border-dotted border-gray-500 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 font-bold text-lg">
+                            </div>
+                            <div>
+                                <label class="block text-gray-800 mb-2 text-lg">2. What did they do with their grandparents?</label>
+                                <input type="text" class="w-full border-b-2 border-dotted border-gray-500 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 font-bold text-lg">
+                            </div>
+                            <div>
+                                <label class="block text-gray-800 mb-2 text-lg">3. Where did they see the show in London?</label>
+                                <input type="text" class="w-full border-b-2 border-dotted border-gray-500 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 font-bold text-lg">
+                            </div>
+                            <div>
+                                <label class="block text-gray-800 mb-2 text-lg">4. Has Tim gone on camping trips before?</label>
+                                <input type="text" class="w-full border-b-2 border-dotted border-gray-500 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 font-bold text-lg">
+                            </div>
+                            <div>
+                                <label class="block text-gray-800 mb-2 text-lg">5. How long did they get lost in the forest?</label>
+                                <input type="text" class="w-full border-b-2 border-dotted border-gray-500 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 font-bold text-lg">
+                            </div>
+                            <div>
+                                <label class="block text-gray-800 mb-2 text-lg">6. Was it the first time Tim has been lost in the forest?</label>
+                                <input type="text" class="w-full border-b-2 border-dotted border-gray-500 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 font-bold text-lg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-14">
+                    <div class="flex items-start md:items-center gap-4 mb-6 relative">
+                        <div class="w-10 h-10 rounded-full border-4 border-[#14b8a6] flex items-center justify-center font-bold text-[#14b8a6] text-xl shrink-0">5</div>
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 leading-snug w-3/4">A. Complete the sentences with the correct form of adjectives.</h2>
+                        <div class="teacher-score-box absolute right-0 top-0 flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-lg border border-yellow-300 no-print">
+                            <label class="text-sm font-bold text-gray-700 font-['Battambang']">ពិន្ទុ៖</label>
+                            <input type="number" class="teacher-sub-score w-16 border rounded text-center font-bold text-blue-700 outline-none p-1" data-ex="ex5a_adj" oninput="window.calculateTotalScore()" placeholder="0">
+                            <span class="text-xs font-bold text-gray-500">/ 10</span>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-6 md:p-8 rounded-xl border-2 border-gray-200 shadow-sm text-lg leading-loose space-y-6">
+                        <p class="text-gray-800 mb-4 border-l-4 border-blue-500 pl-4 bg-blue-50 py-2 rounded-r">
+                            <span class="font-bold text-black">Example:</span> I'm <strong class="text-blue-700 underline decoration-2">worried</strong> about the warming of the Earth. I think global warming is one of our <strong class="text-blue-700 underline decoration-2">biggest</strong> problems today. <span class="italic text-gray-600">(worry, big)</span>
+                        </p>
+                        <p class="text-gray-800">
+                            1. The <input type="text" class="w-32 border-b-2 border-gray-400 bg-white px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> land animal is the cheetah. It's <input type="text" class="w-32 border-b-2 border-gray-400 bg-white px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> than a lion or even a giraffe! It's record speed is about 120 kilometres per hour. <span class="italic text-gray-500">(fast)</span>
+                        </p>
+                        <p class="text-gray-800">
+                            2. The blue whale is the <input type="text" class="w-32 border-b-2 border-gray-400 bg-white px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> animal in water. It can weigh as much as 150 tons or 136,078 kilograms. I am really <input type="text" class="w-32 border-b-2 border-gray-400 bg-white px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> by how big they can be. <span class="italic text-gray-500">(large, amaze)</span>
+                        </p>
+                        <p class="text-gray-800">
+                            3. According to experts, the <input type="text" class="w-32 border-b-2 border-gray-400 bg-white px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> volcano is Mount Vesuvius in Italy, although it hasn't erupted since 1944. This volcano is even <input type="text" class="w-32 border-b-2 border-gray-400 bg-white px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> than Mount Pinatubo in the Philippines or Mount Agung in Indonesia. Over the last 17,000 years, Mount Vesuvius has erupted 8 times. These volcanoes are sometimes <input type="text" class="w-40 border-b-2 border-gray-400 bg-white px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner">. <span class="italic text-gray-500">(dangerous, frighten)</span>
+                        </p>
+                        <p class="text-gray-800">
+                            4. I think Yeak Loam lake is <input type="text" class="w-32 border-b-2 border-gray-400 bg-white px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> and <input type="text" class="w-32 border-b-2 border-gray-400 bg-white px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> than Tonle Sap lake. It was formed from a volcano centuries ago! It is <input type="text" class="w-32 border-b-2 border-gray-400 bg-white px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> however, as it is only about 800 metres in diameter. <span class="italic text-gray-500">(interest, clean, small)</span>
+                        </p>
+                        <p class="text-gray-800">
+                            5. Climbing the <input type="text" class="w-32 border-b-2 border-gray-400 bg-white px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> mountain in the world - 8488 metres tall - is <input type="text" class="w-40 border-b-2 border-gray-400 bg-white px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner">! <span class="italic text-gray-500">(high, exhausting)</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mb-14">
+                    <div class="flex items-start md:items-center gap-4 mb-6 relative">
+                        <div class="w-10 h-10 rounded-full border-4 border-[#14b8a6] flex items-center justify-center font-bold text-[#14b8a6] text-xl shrink-0">7</div>
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 leading-snug w-3/4">Odd one out. Which word doesn't have the same number of syllables as the others? Write in your notebook. <span class="text-sm font-normal text-gray-500 font-['Battambang'] block md:inline mt-1">(* សូមចុចលើពាក្យ)</span></h2>
+                        <div class="teacher-score-box absolute right-0 top-0 flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-lg border border-yellow-300 no-print">
+                            <label class="text-sm font-bold text-gray-700 font-['Battambang']">ពិន្ទុ៖</label>
+                            <input type="number" class="teacher-sub-score w-16 border rounded text-center font-bold text-blue-700 outline-none p-1" data-ex="ex7_syllable" oninput="window.calculateTotalScore()" placeholder="0">
+                            <span class="text-xs font-bold text-gray-500">/ 5</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 md:p-8 rounded-xl border-2 border-dashed border-gray-300 shadow-sm text-lg md:text-xl space-y-6">
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 items-center border-b pb-4">
+                            <div class="font-bold text-black col-span-2 md:col-span-1">Example:</div>
+                            <div class="text-gray-600 italic px-4">shoes</div>
+                            <div class="text-gray-600 italic px-4">phone</div>
+                            <div class="text-gray-600 italic px-4">bridge</div>
+                            <div class="text-gray-600 italic"><span class="px-5 py-1.5 rounded-[50%] border-2 border-red-500 text-red-600 inline-block">museum</span></div>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
+                            <div class="col-span-2 md:col-span-1">1.</div>
+                            <label class="cursor-pointer"><input type="radio" name="q7_1" value="visited" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">visited</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_1" value="played" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">played</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_1" value="touched" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">touched</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_1" value="went" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">went</span></label>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
+                            <div class="col-span-2 md:col-span-1">2.</div>
+                            <label class="cursor-pointer"><input type="radio" name="q7_2" value="earthquake" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">earthquake</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_2" value="pollution" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">pollution</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_2" value="litter" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">litter</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_2" value="desert" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">desert</span></label>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
+                            <div class="col-span-2 md:col-span-1">3.</div>
+                            <label class="cursor-pointer"><input type="radio" name="q7_3" value="hospital" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">hospital</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_3" value="pagoda" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">pagoda</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_3" value="river" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">river</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_3" value="tsunami" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">tsunami</span></label>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
+                            <div class="col-span-2 md:col-span-1">4.</div>
+                            <label class="cursor-pointer"><input type="radio" name="q7_4" value="crocodile" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">crocodile</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_4" value="butterfly" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">butterfly</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_4" value="mosquito" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">mosquito</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_4" value="cockroach" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">cockroach</span></label>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
+                            <div class="col-span-2 md:col-span-1">5.</div>
+                            <label class="cursor-pointer"><input type="radio" name="q7_5" value="pleased" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">pleased</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_5" value="worried" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">worried</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_5" value="inspired" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">inspired</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="q7_5" value="amazed" class="peer sr-only"><span class="px-4 py-1.5 rounded-[50%] peer-checked:border-2 peer-checked:border-red-500 peer-checked:text-red-600 hover:bg-gray-100 transition-all inline-block">amazed</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-14">
+                    <div class="flex items-start md:items-center gap-4 mb-6 relative">
+                        <div class="w-10 h-10 rounded-full border-4 border-[#14b8a6] flex items-center justify-center font-bold text-[#14b8a6] text-xl shrink-0">5</div>
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 leading-snug w-3/4">Complete the sentences with words from the box. Write the answers in your notebook.</h2>
+                        <div class="teacher-score-box absolute right-0 top-0 flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-lg border border-yellow-300 no-print">
+                            <label class="text-sm font-bold text-gray-700 font-['Battambang']">ពិន្ទុ៖</label>
+                            <input type="number" class="teacher-sub-score w-16 border rounded text-center font-bold text-blue-700 outline-none p-1" data-ex="ex5_presperf" oninput="window.calculateTotalScore()" placeholder="0">
+                            <span class="text-xs font-bold text-gray-500">/ 10</span>
+                        </div>
+                    </div>
+                    <div class="bg-[#fde68a] border border-[#f59e0b] py-3 px-6 flex justify-center gap-6 md:gap-16 flex-wrap mb-6 w-full max-w-4xl mx-auto text-gray-800 text-lg md:text-xl font-bold">
+                        <span>for</span>
+                        <span>since</span>
+                        <span>already</span>
+                        <span>yet</span>
+                        <span>ever</span>
+                        <span>never</span>
+                    </div>
+                    <div class="bg-white p-6 md:p-8 rounded-xl border-2 border-gray-200 shadow-sm text-lg leading-loose space-y-4">
+                        <p class="text-gray-800 mb-4 border-l-4 border-blue-500 pl-4 bg-blue-50 py-2 rounded-r">
+                            <span class="font-bold text-black">Example:</span> <span class="italic text-gray-700">I have lived in Phnom Penh <span class="underline decoration-2 font-bold text-blue-700">for</span> 5 years.</span>
+                        </p>
+                        <p>1. I have <input type="text" class="w-24 border-b-2 border-gray-400 bg-gray-50 px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> packed some food for our trip, so you don't have to do it.</p>
+                        <p>2. Kosal has <input type="text" class="w-24 border-b-2 border-gray-400 bg-gray-50 px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> been to any English-speaking countries. He hopes to visit some one day.</p>
+                        <p>3. Have you finished your homework <input type="text" class="w-24 border-b-2 border-gray-400 bg-gray-50 px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner">?</p>
+                        <p>4. Pisey has studied English <input type="text" class="w-24 border-b-2 border-gray-400 bg-gray-50 px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> 2012.</p>
+                        <p>5. Have you <input type="text" class="w-24 border-b-2 border-gray-400 bg-gray-50 px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> been to Japan before? No, I haven't.</p>
+                        <p>6. Have you booked the hotel? No, not <input type="text" class="w-24 border-b-2 border-gray-400 bg-gray-50 px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner">.</p>
+                        <p>7. Have you <input type="text" class="w-24 border-b-2 border-gray-400 bg-gray-50 px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> given directions to any foreigners in English?</p>
+                        <p>8. We have <input type="text" class="w-24 border-b-2 border-gray-400 bg-gray-50 px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> seen our city this polluted. This is the worst it's ever been!</p>
+                        <p>9. The population in this city has remained almost the same <input type="text" class="w-24 border-b-2 border-gray-400 bg-gray-50 px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> 2010.</p>
+                        <p>10. She tried to put the tent up <input type="text" class="w-24 border-b-2 border-gray-400 bg-gray-50 px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-center font-bold shadow-inner"> almost an hour before she gave up!</p>
+                    </div>
+                </div>
+
+                <div class="mb-14">
+                    <div class="flex items-start md:items-center gap-4 mb-6 relative">
+                        <div class="w-10 h-10 rounded-full border-4 border-[#14b8a6] flex items-center justify-center font-bold text-[#14b8a6] text-xl shrink-0">7</div>
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 leading-snug w-3/4">Think of the most interesting/fun/exciting thing you have done in your life (experience). Write at least five sentences describing it. Write the answers in your notebook.</h2>
+                        <div class="teacher-score-box absolute right-0 top-0 flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-lg border border-yellow-300 no-print">
+                            <label class="text-sm font-bold text-gray-700 font-['Battambang']">ពិន្ទុ៖</label>
+                            <input type="number" class="teacher-sub-score w-16 border rounded text-center font-bold text-blue-700 outline-none p-1" data-ex="ex7_writing" oninput="window.calculateTotalScore()" placeholder="0">
+                            <span class="text-xs font-bold text-gray-500">/ 50</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 md:p-8 rounded-xl border-2 border-gray-200 shadow-sm space-y-4 text-gray-800 text-lg">
+                        <p class="text-gray-600 font-medium">You can use these questions to help you start:</p>
+                        <ul class="list-none space-y-1 text-gray-600 ml-2 md:ml-4 mb-4">
+                            <li>1. What is the most exciting/interesting thing you have done?</li>
+                            <li>2. Why is it the most exciting/interesting thing to you?</li>
+                            <li>3. How often/how many times have you done it?</li>
+                            <li>4. When was the last time you did it?</li>
+                            <li>5. Describe the activities you did at that time.</li>
+                        </ul>
+                        <div class="mb-4 bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 text-base">
+                            <span class="font-bold text-black">Example:</span> 
+                            <span class="italic text-gray-700">The most exciting thing I've ever done in my life is swimming across the big lake in our village. It is the best experience for me because it is scary but exciting at the same time...</span>
+                        </div>
+                        <textarea class="w-full border-2 border-dashed border-gray-400 rounded-lg p-4 outline-none focus:border-blue-500 focus:bg-blue-50 text-blue-800 font-medium min-h-[200px] text-lg resize-y" placeholder="Start writing your experience here..."></textarea>
+                    </div>
+                </div>
+
+                <div class="mb-14">
+                    <div class="flex items-start md:items-center gap-4 mb-6 relative">
+                        <div class="w-10 h-10 rounded-full border-4 border-[#14b8a6] flex items-center justify-center font-bold text-[#14b8a6] text-xl shrink-0">8</div>
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900 leading-snug w-3/4">A. Look at the words. Cross out the word that does not belong in the same word group. Write the answers in your notebook. <span class="text-sm font-normal text-gray-500 font-['Battambang'] block md:inline mt-1">(* សូមចុចលើពាក្យដើម្បីឆូតខ្វែងចោល)</span></h2>
+                        <div class="teacher-score-box absolute right-0 top-0 flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-lg border border-yellow-300 no-print">
+                            <label class="text-sm font-bold text-gray-700 font-['Battambang']">ពិន្ទុ៖</label>
+                            <input type="number" class="teacher-sub-score w-16 border rounded text-center font-bold text-blue-700 outline-none p-1" data-ex="ex8a" oninput="window.calculateTotalScore()" placeholder="0">
+                            <span class="text-xs font-bold text-gray-500">/ 16</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 md:p-8 rounded-xl border-2 border-gray-200 shadow-sm text-lg space-y-6 text-gray-800">
+                        <div class="mb-6 leading-loose border-b pb-4">
+                            <span class="font-bold text-black">Example:</span>
+                            <span class="italic ml-2">was – gone – eaten – <span class="line-through text-red-500 decoration-2">visited</span></span>
+                            <span class="text-gray-600 text-base md:ml-2 block md:inline mt-2 md:mt-0 italic">(Because visited is a regular verb and the other three words are irregular verbs)</span>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full">
+                                <div class="flex flex-wrap items-center gap-1 md:gap-2 whitespace-nowrap shrink-0">
+                                    <span class="mr-1">1.</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_1" value="w1" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">swimming</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_1" value="w2" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">geography</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_1" value="w3" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">playing games</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_1" value="w4" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">watching T.V</span></label>
+                                </div>
+                                <input type="text" placeholder="(Because... ហេតុផល...)" class="border-b border-dotted border-gray-400 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-sm md:text-base w-full md:flex-1 italic">
+                            </div>
+                            <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full">
+                                <div class="flex flex-wrap items-center gap-1 md:gap-2 whitespace-nowrap shrink-0">
+                                    <span class="mr-1">2.</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_2" value="w1" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">desert</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_2" value="w2" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">river</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_2" value="w3" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">lake</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_2" value="w4" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">ocean</span></label>
+                                </div>
+                                <input type="text" placeholder="(Because... ហេតុផល...)" class="border-b border-dotted border-gray-400 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-sm md:text-base w-full md:flex-1 italic">
+                            </div>
+                            <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full">
+                                <div class="flex flex-wrap items-center gap-1 md:gap-2 whitespace-nowrap shrink-0">
+                                    <span class="mr-1">3.</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_3" value="w1" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">alligator</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_3" value="w2" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">turtle</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_3" value="w3" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">scorpion</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_3" value="w4" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">cheetah</span></label>
+                                </div>
+                                <input type="text" placeholder="(Because... ហេតុផល...)" class="border-b border-dotted border-gray-400 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-sm md:text-base w-full md:flex-1 italic">
+                            </div>
+                            <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full">
+                                <div class="flex flex-wrap items-center gap-1 md:gap-2 whitespace-nowrap shrink-0">
+                                    <span class="mr-1">4.</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_4" value="w1" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">mosquito</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_4" value="w2" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">frog</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_4" value="w3" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">beetle</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_4" value="w4" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">butterfly</span></label>
+                                </div>
+                                <input type="text" placeholder="(Because... ហេតុផល...)" class="border-b border-dotted border-gray-400 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-sm md:text-base w-full md:flex-1 italic">
+                            </div>
+                            <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full">
+                                <div class="flex flex-wrap items-center gap-1 md:gap-2 whitespace-nowrap shrink-0">
+                                    <span class="mr-1">5.</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_5" value="w1" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">interested</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_5" value="w2" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">embarrassed</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_5" value="w3" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">frightened</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_5" value="w4" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">worried</span></label>
+                                </div>
+                                <input type="text" placeholder="(Because... ហេតុផល...)" class="border-b border-dotted border-gray-400 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-sm md:text-base w-full md:flex-1 italic">
+                            </div>
+                            <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full">
+                                <div class="flex flex-wrap items-center gap-1 md:gap-2 whitespace-nowrap shrink-0">
+                                    <span class="mr-1">6.</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_6" value="w1" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">tent</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_6" value="w2" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">skiing</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_6" value="w3" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">sleeping bag</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_6" value="w4" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">camping</span></label>
+                                </div>
+                                <input type="text" placeholder="(Because... ហេតុផល...)" class="border-b border-dotted border-gray-400 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-sm md:text-base w-full md:flex-1 italic">
+                            </div>
+                            <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full">
+                                <div class="flex flex-wrap items-center gap-1 md:gap-2 whitespace-nowrap shrink-0">
+                                    <span class="mr-1">7.</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_7" value="w1" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">earthquake</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_7" value="w2" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">tsunami</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_7" value="w3" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">rain</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_7" value="w4" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">tornado</span></label>
+                                </div>
+                                <input type="text" placeholder="(Because... ហេតុផល...)" class="border-b border-dotted border-gray-400 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-sm md:text-base w-full md:flex-1 italic">
+                            </div>
+                            <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full">
+                                <div class="flex flex-wrap items-center gap-1 md:gap-2 whitespace-nowrap shrink-0">
+                                    <span class="mr-1">8.</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_8" value="w1" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">deforestation</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_8" value="w2" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">water pollution</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_8" value="w3" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">overfishing</span></label>
+                                    <span class="text-gray-400">–</span>
+                                    <label class="cursor-pointer"><input type="radio" name="q8_8" value="w4" class="peer sr-only"><span class="px-2 py-1 peer-checked:line-through peer-checked:text-red-500 peer-checked:decoration-2 hover:bg-gray-100 rounded transition-all">recycling</span></label>
+                                </div>
+                                <input type="text" placeholder="(Because... ហេតុផល...)" class="border-b border-dotted border-gray-400 bg-transparent px-2 py-1 outline-none focus:border-blue-500 text-blue-700 text-sm md:text-base w-full md:flex-1 italic">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <div id="studentActionBtns" class="mt-10 flex justify-end gap-4 no-print border-t pt-8">
+                <button onclick="window.submitCloudWork()" class="px-6 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2 shadow-md w-full md:w-auto">
+                    បញ្ជូនកិច្ចការ (Submit)
+                </button>
+            </div>
+            
+            <div id="teacherActionBtns" class="mt-10 hidden flex-col border-t pt-8 gap-6 no-print">
+                <div class="flex flex-col md:flex-row items-center gap-4 bg-yellow-50 p-6 rounded-xl border-2 border-yellow-400 w-full shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <label class="font-bold text-gray-800 text-lg whitespace-nowrap font-['Battambang']">ពិន្ទុសរុប (Total)៖</label>
+                        <input type="number" id="teacherScoreInput" class="w-24 border-2 border-gray-400 rounded-lg px-2 py-2 text-center font-bold text-blue-700 text-xl outline-none focus:border-blue-500" placeholder="0" readonly>
+                        <span class="text-gray-500 font-bold text-lg whitespace-nowrap">/ 150</span>
+                    </div>
+                    <input type="text" id="teacherCommentInput" class="flex-1 border-2 border-gray-400 rounded-lg px-4 py-2 outline-none focus:border-blue-500 text-lg w-full font-['Battambang']" placeholder="មតិយោបល់ (Comment)...">
+                    <button onclick="window.saveTeacherGrade()" class="px-8 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition shadow-md whitespace-nowrap text-lg w-full md:w-auto">
+                        រក្សាទុក (Save)
+                    </button>
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-end gap-4 w-full">
+                    <button onclick="window.exitTeacherMode()" class="px-6 py-3 bg-gray-600 text-white font-bold rounded-lg hover:bg-gray-700 transition flex items-center justify-center gap-2 shadow-md w-full md:w-auto">
+                        ត្រលប់ក្រោយ (Back)
+                    </button>
+                    <button onclick="window.print()" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-md w-full md:w-auto">
+                        បោះពុម្ព (Print)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="teacherDashboard" class="hidden">
+            <div class="flex justify-between items-center mb-6 mt-4">
+                <h3 class="text-2xl font-bold text-gray-800 flex items-center gap-2">👨‍🏫 ផ្ទាំងគ្រប់គ្រងសម្រាប់គ្រូ</h3>
+                <button onclick="window.exitTeacherDashboard()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-bold text-sm font-['Battambang']">ចាកចេញ (Exit)</button>
+            </div>
+            
+            <div id="loadingDash" class="text-center py-10 text-gray-500 font-bold hidden font-['Battambang']">
+                កំពុងទាញយកទិន្នន័យពី Cloud... ⏳
+            </div>
+            
+            <div id="tableContainer" class="overflow-x-auto border rounded-lg bg-white">
+                <table class="w-full text-left border-collapse min-w-[600px]">
+                    <thead class="bg-blue-50 text-blue-800">
+                        <tr>
+                            <th class="p-4 border-b font-bold w-16">ល.រ</th>
+                            <th class="p-4 border-b font-bold font-['Battambang']">ឈ្មោះសិស្ស</th>
+                            <th class="p-4 border-b font-bold font-['Battambang']">ថ្នាក់ទី</th>
+                            <th class="p-4 border-b font-bold text-center font-['Battambang']">ពិន្ទុ</th>
+                            <th class="p-4 border-b font-bold text-center font-['Battambang']">សកម្មភាព</th>
+                        </tr>
+                    </thead>
+                    <tbody id="submissionsBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="messageModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50 px-4">
+        <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full text-center transform scale-95 transition-transform duration-300 relative">
+            <button onclick="window.closeModal('messageModal')" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 font-bold text-xl">&times;</button>
+            <div id="modalIcon" class="mb-4 flex justify-center text-5xl"></div>
+            <h3 id="modalTitle" class="text-xl md:text-2xl font-bold mb-2 text-gray-800 font-['Battambang']"></h3>
+            <p id="modalMessage" class="text-gray-600 mb-6 text-base md:text-lg font-['Battambang']"></p>
+            <button onclick="window.closeModal('messageModal')" class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition text-lg shadow-md font-['Battambang']">យល់ព្រម (OK)</button>
+        </div>
+    </div>
+
+    <div id="passwordModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50 px-4">
+        <div class="bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full text-center transform scale-95 transition-transform duration-300 relative">
+            <button onclick="window.closeModal('passwordModal')" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 font-bold text-xl">&times;</button>
+            <div class="mb-4 flex justify-center text-5xl">🔒</div>
+            <h3 class="text-xl font-bold mb-4 text-gray-800 font-['Battambang']">ផ្ទាំងគ្រប់គ្រងសម្រាប់គ្រូ</h3>
+            <p class="text-gray-500 text-sm mb-4 font-['Battambang']">សូមបញ្ចូលលេខកូដសម្ងាត់ដើម្បីបន្ត</p>
+            <input type="password" id="teacherPassword" class="w-full border-2 border-gray-300 rounded-lg p-3 mb-6 text-center text-2xl tracking-[0.5em] font-bold focus:border-blue-500 outline-none" placeholder="****">
+            <button onclick="window.verifyTeacherLogin()" class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition text-lg shadow-md font-['Battambang']">ចូល (Login)</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration from User's uploaded screenshot
+        const firebaseConfig = {
+            apiKey: "AIzaSyCn-YoX3HtsYn0imb2aM6Q-dfXRC5n88Bw",
+            authDomain: "english-assignment-b5fef.firebaseapp.com",
+            projectId: "english-assignment-b5fef",
+            storageBucket: "english-assignment-b5fef.firebasestorage.app",
+            messagingSenderId: "271791265537",
+            appId: "1:271791265537:web:904a3b9727e7d1e917ed00",
+            measurementId: "G-PGLRTD1N7P"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        let currentUser;
+        let submissionsRef = collection(db, 'student_assignments'); 
+        let globalSubmissions = [];
+        let currentViewingStudentId = null;
+
+        signInAnonymously(auth).catch((error) => {
+            console.error("Auth Error:", error);
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+        });
+
+        window.submitCloudWork = async function() {
+            const name = document.getElementById('studentName').value.trim();
+            const stuClass = document.getElementById('studentClass').value.trim();
+
+            if (!name || !stuClass) {
+                window.showModal('ព័ត៌មានមិនទាន់គ្រប់គ្រាន់', 'សូមបំពេញ "ឈ្មោះ" និង "ថ្នាក់" របស់អ្នកជាមុនសិន។', '⚠️');
+                return;
+            }
+
+            if (!currentUser) {
+                window.showModal('កំពុងភ្ជាប់ប្រព័ន្ធ', 'សូមរង់ចាំបន្តិច ប្រព័ន្ធកំពុងភ្ជាប់...', '⏳');
+                return;
+            }
+
+            const textInputs = Array.from(document.querySelectorAll('main input[type="text"]:not([readonly]), main textarea')).map(el => el.value);
+            const radioInputs = Array.from(document.querySelectorAll('main input[type="radio"]')).map(el => el.checked);
+
+            if (textInputs.filter(v => v.trim() !== '').length === 0 && radioInputs.filter(c => c).length === 0) {
+                window.showModal('កិច្ចការទទេ', 'អ្នកមិនទាន់បានបំពេញ ឬជ្រើសរើសចម្លើយណាមួយនៅឡើយទេ។', '❌');
+                return;
+            }
+
+            try {
+                const docData = {
+                    name: name,
+                    studentClass: stuClass,
+                    timestamp: Date.now(),
+                    dateString: new Date().toLocaleString('km-KH'),
+                    answers: { texts: textInputs, radios: radioInputs },
+                    subScores: {} 
+                };
+                
+                window.showModal('កំពុងបញ្ជូន...', 'សូមរង់ចាំបន្តិច...', '⏳');
+                await addDoc(submissionsRef, docData);
+                
+                window.showModal('ជោគជ័យ!', `អរគុណ <b>${name}</b>!<br>កិច្ចការរបស់អ្នកត្រូវបានបញ្ជូនទៅកុំព្យូទ័រលោកគ្រូអ្នកគ្រូដោយជោគជ័យ។`, '✅');
+                
+                setTimeout(() => {
+                    document.getElementById('studentName').value = '';
+                    document.getElementById('studentClass').value = '';
+                    document.querySelectorAll('main input[type="text"]:not([readonly]), main textarea').forEach(el => el.value = '');
+                    document.querySelectorAll('main input[type="radio"]').forEach(el => el.checked = false);
+                }, 3000);
+
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                window.showModal('មានបញ្ហា', 'មិនអាចបញ្ជូនកិច្ចការបានទេ សូមព្យាយាមម្តងទៀត។', '❌');
+            }
+        };
+
+        window.openTeacherLogin = function() {
+            document.getElementById('teacherPassword').value = '';
+            const m = document.getElementById('passwordModal');
+            m.classList.remove('hidden');
+            setTimeout(() => { m.firstElementChild.classList.remove('scale-95'); m.firstElementChild.classList.add('scale-100'); }, 10);
+            setTimeout(() => document.getElementById('teacherPassword').focus(), 300);
+        };
+
+        window.verifyTeacherLogin = function() {
+            const pwd = document.getElementById('teacherPassword').value;
+            if (pwd === "1234") {
+                window.closeModal('passwordModal');
+                document.getElementById('assignmentContainer').classList.add('hidden');
+                document.getElementById('teacherDashboard').classList.remove('hidden');
+                window.loadDashboardData();
+            } else {
+                window.showModal('លេខកូដខុស', 'លេខកូដសម្ងាត់មិនត្រឹមត្រូវទេ! សូមព្យាយាមម្ដងទៀត។', '❌');
+                document.getElementById('teacherPassword').value = '';
+            }
+        };
+
+        window.exitTeacherDashboard = function() {
+            document.getElementById('teacherDashboard').classList.add('hidden');
+            document.getElementById('assignmentContainer').classList.remove('hidden');
+        };
+
+        window.loadDashboardData = async function() {
+            const tbody = document.getElementById('submissionsBody');
+            const loading = document.getElementById('loadingDash');
+            
+            tbody.innerHTML = '';
+            loading.classList.remove('hidden');
+
+            try {
+                const querySnapshot = await getDocs(submissionsRef);
+                globalSubmissions = [];
+                
+                querySnapshot.forEach((doc) => {
+                    globalSubmissions.push({ id: doc.id, ...doc.data() });
+                });
+
+                globalSubmissions.sort((a, b) => b.timestamp - a.timestamp);
+                loading.classList.add('hidden');
+
+                if (globalSubmissions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center p-6 text-gray-500">មិនទាន់មានសិស្សបញ្ជូនកិច្ចការនៅឡើយទេ</td></tr>';
+                    return;
+                }
+
+                globalSubmissions.forEach((sub, index) => {
+                    let scoreBadge = '<span class="text-gray-400 italic text-sm">មិនទាន់កែ</span>';
+                    if (sub.teacherScore !== undefined) {
+                        scoreBadge = `<span class="bg-green-100 text-green-700 px-2 py-1 rounded font-bold">${sub.teacherScore} / 150</span>`;
+                    }
+
+                    tbody.innerHTML += `
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-4 text-center font-bold text-gray-500">${index + 1}</td>
+                            <td class="p-4 font-bold text-blue-700">${sub.name} <br> <span class="text-xs text-gray-400 font-normal">${sub.dateString}</span></td>
+                            <td class="p-4 text-gray-700">${sub.studentClass}</td>
+                            <td class="p-4 text-center">${scoreBadge}</td>
+                            <td class="p-4 text-center">
+                                <button onclick="window.viewStudentData(${index})" class="px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded font-bold hover:bg-indigo-200 text-sm shadow-sm transition">មើល/កែ (Grade)</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+            } catch (error) {
+                console.error("Error fetching docs: ", error);
+                loading.classList.add('hidden');
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center p-4 text-red-500">មានបញ្ហាក្នុងការទាញយកទិន្នន័យ</td></tr>';
+            }
+        };
+
+        window.viewStudentData = function(index) {
+            const sub = globalSubmissions[index];
+            if(!sub) return;
+
+            currentViewingStudentId = sub.id;
+            document.getElementById('studentName').value = sub.name;
+            document.getElementById('studentClass').value = sub.studentClass;
+            
+            document.getElementById('teacherScoreInput').value = sub.teacherScore !== undefined ? sub.teacherScore : '';
+            document.getElementById('teacherCommentInput').value = sub.teacherComment || '';
+
+            const teacherSubInputs = document.querySelectorAll('.teacher-sub-score');
+            teacherSubInputs.forEach(input => {
+                const exId = input.getAttribute('data-ex');
+                input.value = (sub.subScores && sub.subScores[exId] !== undefined) ? sub.subScores[exId] : '';
+            });
+
+            const textInputs = document.querySelectorAll('main input[type="text"]:not([readonly]), main textarea');
+            textInputs.forEach((el, i) => {
+                el.value = sub.answers.texts[i] || '';
+                el.disabled = true;
+            });
+
+            const radioInputs = document.querySelectorAll('main input[type="radio"]');
+            radioInputs.forEach((el, i) => {
+                el.checked = sub.answers.radios[i] || false;
+                el.disabled = true;
+            });
+
+            document.getElementById('teacherDashboard').classList.add('hidden');
+            document.getElementById('assignmentContainer').classList.remove('hidden');
+            document.getElementById('assignmentContainer').classList.add('teacher-mode-active');
+            
+            document.getElementById('studentActionBtns').classList.add('hidden');
+            document.getElementById('teacherActionBtns').classList.remove('hidden');
+            document.getElementById('teacherActionBtns').classList.add('flex');
+        };
+
+        window.calculateTotalScore = function() {
+            let total = 0;
+            const subInputs = document.querySelectorAll('.teacher-sub-score');
+            subInputs.forEach(input => {
+                const val = parseInt(input.value);
+                if(!isNaN(val)) {
+                    total += val;
+                }
+            });
+            document.getElementById('teacherScoreInput').value = total;
+        };
+
+        window.saveTeacherGrade = async function() {
+            if (!currentViewingStudentId) return;
+
+            const score = document.getElementById('teacherScoreInput').value;
+            const comment = document.getElementById('teacherCommentInput').value;
+
+            let subScores = {};
+            document.querySelectorAll('.teacher-sub-score').forEach(input => {
+                const exId = input.getAttribute('data-ex');
+                const val = parseInt(input.value);
+                if(!isNaN(val)) {
+                    subScores[exId] = val;
+                }
+            });
+
+            if (score === '') {
+                window.showModal('មិនទាន់មានពិន្ទុ', 'សូមវាយបញ្ចូលពិន្ទុមុននឹងរក្សាទុក។', '⚠️');
+                return;
+            }
+
+            try {
+                window.showModal('កំពុងរក្សាទុក...', 'សូមរង់ចាំបន្តិច...', '⏳');
+                
+                const docRef = doc(db, 'student_assignments', currentViewingStudentId);
+                
+                await setDoc(docRef, {
+                    teacherScore: parseInt(score),
+                    teacherComment: comment,
+                    subScores: subScores,
+                    gradedAt: Date.now()
+                }, { merge: true });
+
+                window.showModal('ជោគជ័យ!', 'ពិន្ទុត្រូវបានរក្សាទុកដោយជោគជ័យ។', '✅');
+                
+                const studentIndex = globalSubmissions.findIndex(s => s.id === currentViewingStudentId);
+                if (studentIndex > -1) {
+                    globalSubmissions[studentIndex].teacherScore = parseInt(score);
+                    globalSubmissions[studentIndex].teacherComment = comment;
+                    globalSubmissions[studentIndex].subScores = subScores;
+                }
+
+                setTimeout(() => {
+                    window.closeModal('messageModal');
+                    window.exitTeacherMode();
+                }, 1500);
+
+            } catch (error) {
+                console.error("Error updating score: ", error);
+                window.showModal('មានបញ្ហា', 'មិនអាចរក្សាទុកពិន្ទុបានទេ។', '❌');
+            }
+        };
+
+        window.exitTeacherMode = function() {
+            currentViewingStudentId = null;
+
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentClass').value = '';
+            
+            document.querySelectorAll('.teacher-sub-score').forEach(input => {
+                input.value = '';
+            });
+
+            document.querySelectorAll('main input[type="text"]:not([readonly]), main textarea').forEach(el => {
+                el.value = '';
+                el.disabled = false;
+            });
+            document.querySelectorAll('main input[type="radio"]').forEach(el => {
+                el.checked = false;
+                el.disabled = false;
+            });
+
+            document.getElementById('assignmentContainer').classList.remove('teacher-mode-active');
+            document.getElementById('studentActionBtns').classList.remove('hidden');
+            document.getElementById('teacherActionBtns').classList.add('hidden');
+            document.getElementById('teacherActionBtns').classList.remove('flex');
+            
+            document.getElementById('assignmentContainer').classList.add('hidden');
+            document.getElementById('teacherDashboard').classList.remove('hidden');
+            window.loadDashboardData();
+        };
+
+        window.showModal = function(title, msg, icon) {
+            document.getElementById('modalTitle').innerHTML = title;
+            document.getElementById('modalMessage').innerHTML = msg;
+            document.getElementById('modalIcon').innerHTML = icon;
+            const m = document.getElementById('messageModal');
+            m.classList.remove('hidden');
+            setTimeout(() => {
+                m.firstElementChild.classList.remove('scale-95');
+                m.firstElementChild.classList.add('scale-100');
+            }, 10);
+        };
+        
+        window.closeModal = function(id) {
+            const m = document.getElementById(id);
+            m.firstElementChild.classList.remove('scale-100');
+            m.firstElementChild.classList.add('scale-95');
+            setTimeout(() => m.classList.add('hidden'), 200);
+        };
+    </script>
+</body>
+</html>
