@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 11 English: Past Simple & Cambodian History (A2+)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Custom scrollbar for text areas/lists */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-blue-800 text-white shadow-md sticky top-0 z-10">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold flex items-center gap-2">
+                🇰🇭 Grade 11 English (A2+)
+            </h1>
+            <nav class="flex gap-2 md:gap-4 text-sm md:text-base">
+                <button id="btn-nav-home" class="hover:text-blue-200 transition-colors hidden">Home</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-5xl mx-auto w-full px-4 py-8 relative">
+        
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="absolute inset-0 bg-slate-100/80 z-50 flex items-center justify-center rounded-xl hidden">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-800"></div>
+        </div>
+
+        <!-- VIEW: Home Screen -->
+        <div id="view-home" class="fade-in max-w-2xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-8">
+            <div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-4">Past Simple Tense</h2>
+                <p class="text-slate-600 text-lg mb-2">Topic Focus: Cambodian History</p>
+                <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">Estimated time: 60 minutes</span>
+            </div>
+            
+            <div class="grid grid-cols-1 gap-4 max-w-md mx-auto">
+                <button id="btn-start-quiz" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl shadow-sm transition-all transform hover:-translate-y-1">
+                    Take the Quiz (Student)
+                </button>
+                <button id="btn-check-score" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold py-4 px-6 rounded-xl border border-indigo-200 transition-all">
+                    Check My Score
+                </button>
+                <div class="pt-6 border-t border-slate-100">
+                    <button id="btn-teacher-login" class="text-slate-500 hover:text-slate-800 font-medium transition-colors text-sm underline underline-offset-4">
+                        Teacher Access
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: Student Quiz -->
+        <div id="view-quiz" class="fade-in hidden space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 border-l-4 border-l-blue-600">
+                <h2 class="text-2xl font-bold mb-6 border-b pb-4">Student Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
+                        <input type="text" id="student-name" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow" placeholder="e.g., Sokha Chan">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Grade & Section</label>
+                        <input type="text" id="student-grade" class="w-full border border-slate-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow" placeholder="e.g., Grade 11A">
+                    </div>
+                </div>
+            </div>
+
+            <div id="quiz-container" class="space-y-6">
+                <!-- Exercises will be injected here by JS -->
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex justify-between items-center sticky bottom-4 z-10 shadow-lg border-t-4 border-t-green-500">
+                <span class="text-slate-500 font-medium hidden md:inline-block">Take your time and review your answers.</span>
+                <button id="btn-submit-quiz" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-xl shadow-md transition-all transform hover:-translate-y-1 w-full md:w-auto text-lg">
+                    Submit My Answers
+                </button>
+            </div>
+        </div>
+
+        <!-- VIEW: Teacher Dashboard -->
+        <div id="view-teacher" class="fade-in hidden space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 flex justify-between items-center border-l-4 border-l-indigo-600">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800">Teacher Dashboard</h2>
+                    <p class="text-slate-500">Review, grade, and provide feedback on student submissions.</p>
+                </div>
+                <button id="btn-teacher-refresh" class="p-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors" title="Refresh">
+                    🔄
+                </button>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-max">
+                        <thead class="bg-slate-50 text-slate-600 text-sm border-b border-slate-200">
+                            <tr>
+                                <th class="py-4 px-6 font-medium">Student Name</th>
+                                <th class="py-4 px-6 font-medium">Class</th>
+                                <th class="py-4 px-6 font-medium">Status</th>
+                                <th class="py-4 px-6 font-medium text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teacher-submissions-list" class="divide-y divide-slate-100">
+                            <!-- Submissions will load here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="teacher-empty-state" class="p-8 text-center text-slate-500 hidden">
+                    No submissions found yet.
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: Grading Modal for Teacher -->
+        <div id="modal-grading" class="fixed inset-0 bg-slate-900/60 z-50 flex justify-center items-center hidden fade-in py-6 px-4">
+            <div class="bg-white w-full max-w-5xl rounded-2xl shadow-xl flex flex-col h-full max-h-full overflow-hidden">
+                <div class="p-4 md:p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                    <h3 class="text-xl font-bold text-slate-800" id="grading-modal-title">Grading Student</h3>
+                    <button class="close-grading-modal text-slate-400 hover:text-red-500 text-3xl leading-none transition-colors">&times;</button>
+                </div>
+                <div class="p-4 md:p-6 overflow-y-auto flex-grow" id="grading-modal-content">
+                    <!-- Student answers and Answer Keys injected here -->
+                </div>
+                <div class="p-4 md:p-6 border-t border-slate-200 bg-slate-50 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex items-center gap-4 w-full md:w-auto bg-white px-4 py-2 rounded-xl border border-slate-200">
+                        <label class="font-bold text-slate-700">Final Total Score:</label>
+                        <input type="number" id="grading-final-score" class="w-20 border border-blue-300 bg-blue-50 rounded-lg px-2 py-1 text-center font-bold text-xl text-blue-700 outline-none focus:ring-2 focus:ring-blue-500" min="0">
+                        <span class="text-slate-500 text-lg font-medium" id="grading-max-score">/ 30</span>
+                    </div>
+                    <div class="flex gap-3 w-full md:w-auto">
+                        <button class="close-grading-modal w-full md:w-auto px-6 py-3 border border-slate-300 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors font-medium">Cancel</button>
+                        <button id="btn-save-grade" class="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm transition-colors">Save Grade & Return</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generic Modal -->
+        <div id="modal-generic" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center hidden fade-in px-4">
+            <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
+                <div class="p-6 text-center space-y-4">
+                    <h3 id="modal-title" class="text-2xl font-bold text-slate-800">Title</h3>
+                    <p id="modal-message" class="text-slate-600 pb-2">Message</p>
+                    <input type="text" id="modal-input" class="w-full border border-slate-300 rounded-lg px-4 py-3 hidden focus:ring-2 focus:ring-blue-500 outline-none" placeholder="">
+                    <button id="btn-modal-action" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-colors">OK</button>
+                    <button id="btn-modal-cancel" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl transition-colors hidden mt-2">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Setup
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'history-english-app-v2';
+        let db, auth;
+        let isFirebaseReady = false;
+
+        // Init Firebase
+        async function initFirebase() {
+            try {
+                if (typeof __firebase_config !== 'undefined') {
+                    const app = initializeApp(JSON.parse(__firebase_config));
+                    db = getFirestore(app);
+                    auth = getAuth(app);
+
+                    if (typeof __initial_auth_token !== 'undefined') {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    isFirebaseReady = true;
+                    console.log("Firebase initialized securely.");
+                } else {
+                    console.warn("Firebase config not found. App will run in memory mode only.");
+                }
+            } catch (error) {
+                console.error("Firebase init error:", error);
+            }
+        }
+
+        // --- COMPREHENSIVE QUIZ DATA (60 Minutes, A2+ Level) ---
+        const quizConfig = [
+            {
+                id: 'ex1',
+                title: 'Exercise 1: Regular & Irregular Verbs',
+                instructions: 'Fill in the blanks with the correct <strong>Past Simple</strong> form of the verbs in brackets. <em>(10 points)</em>',
+                example: 'Example: The Khmer Empire <strong>built</strong> (build) many temples.',
+                type: 'fill-blank',
+                maxScore: 10,
+                questions: [
+                    { id: 'q1_1', text: 'King Norodom {blank} (sign) a treaty with France in 1863.', answer: 'signed' },
+                    { id: 'q1_2', text: 'Jayavarman VII {blank} (become) king in 1181.', answer: 'became' },
+                    { id: 'q1_3', text: 'French explorers {blank} (discover) the ruins of Angkor in the jungle.', answer: 'discovered' },
+                    { id: 'q1_4', text: 'Cambodia {blank} (gain) full independence in 1953.', answer: 'gained' },
+                    { id: 'q1_5', text: 'The French administration {blank} (leave) Cambodia in the 1950s.', answer: 'left' },
+                    { id: 'q1_6', text: 'Many students {blank} (study) French in schools during the protectorate.', answer: 'studied' },
+                    { id: 'q1_7', text: 'The king {blank} (move) the capital city to Phnom Penh in 1434.', answer: 'moved' },
+                    { id: 'q1_8', text: 'Ancient farmers {blank} (grow) rice near the Tonle Sap lake.', answer: 'grew' },
+                    { id: 'q1_9', text: 'King Suramarit {blank} (die) in 1960.', answer: 'died' },
+                    { id: 'q1_10', text: 'The people {blank} (celebrate) Independence Day in the streets.', answer: 'celebrated' }
+                ]
+            },
+            {
+                id: 'ex2',
+                title: 'Exercise 2: Auxiliary Verbs & "To Be"',
+                instructions: 'Choose the correct verb to complete the historical questions and sentences. <em>(5 points)</em>',
+                example: 'Example: <strong>Did</strong> the French arrive in the 19th century?',
+                type: 'multiple-choice',
+                maxScore: 5,
+                questions: [
+                    { id: 'q2_1', text: 'When _____ King Sihanouk declare independence?', options: ['did', 'do', 'does'], answer: 'did' },
+                    { id: 'q2_2', text: 'The Khmer Empire _____ very powerful in Southeast Asia.', options: ['was', 'were', 'did'], answer: 'was' },
+                    { id: 'q2_3', text: '_____ the builders use sandstone for the temples?', options: ['Did', 'Were', 'Was'], answer: 'Did' },
+                    { id: 'q2_4', text: 'The citizens _____ happy to finally be independent.', options: ['was', 'were', 'did'], answer: 'were' },
+                    { id: 'q2_5', text: 'They _____ new laws after the country became independent.', options: ['make', 'made', 'making'], answer: 'made' }
+                ]
+            },
+            {
+                id: 'ex3',
+                title: 'Exercise 3: Negative Sentences',
+                instructions: 'Rewrite the sentences below to make them <strong>Negative</strong>. Use <em>didn\'t + base verb</em> or <em>wasn\'t/weren\'t</em>. <em>(5 points)</em>',
+                example: 'Example: The French built Angkor Wat. <br> -> <strong>The French didn\'t build Angkor Wat.</strong>',
+                type: 'text-input',
+                maxScore: 5,
+                questions: [
+                    { id: 'q3_1', text: 'Jayavarman VII was a selfish king.', answer: "Jayavarman VII wasn't a selfish king." },
+                    { id: 'q3_2', text: 'They found gold inside the ancient temple.', answer: "They didn't find gold inside the ancient temple." },
+                    { id: 'q3_3', text: 'The Chams won the final war.', answer: "The Chams didn't win the final war." },
+                    { id: 'q3_4', text: 'Cambodia became independent in 1940.', answer: "Cambodia didn't become independent in 1940." },
+                    { id: 'q3_5', text: 'The people lived in peace during the war.', answer: "The people didn't live in peace during the war." }
+                ]
+            },
+            {
+                id: 'ex4',
+                title: 'Exercise 4: Reading Comprehension',
+                instructions: 'Read the short text about King Jayavarman VII. Then, decide if the statements below are <strong>True</strong> or <strong>False</strong>. <em>(5 points)</em>',
+                passage: "King Jayavarman VII was one of the most famous and powerful kings of the Khmer Empire. He became king in 1181. Before he was king, he fought many difficult battles against enemies. When he became the ruler, he wanted to help his people. He didn't build big palaces for himself. Instead, he built hospitals, roads, and the famous Bayon temple. He also changed the official state religion from Hinduism to Buddhism. Many historians believe he was a very kind and strong leader.",
+                type: 'multiple-choice',
+                maxScore: 5,
+                questions: [
+                    { id: 'q4_1', text: 'Jayavarman VII became king in 1181.', options: ['True', 'False'], answer: 'True' },
+                    { id: 'q4_2', text: 'He built many large, expensive palaces for himself.', options: ['True', 'False'], answer: 'False' },
+                    { id: 'q4_3', text: 'He built hospitals to help his people.', options: ['True', 'False'], answer: 'True' },
+                    { id: 'q4_4', text: 'He didn\'t fight any battles before becoming the king.', options: ['True', 'False'], answer: 'False' },
+                    { id: 'q4_5', text: 'He changed the religion to Buddhism.', options: ['True', 'False'], answer: 'True' }
+                ]
+            },
+            {
+                id: 'ex5',
+                title: 'Exercise 5: Sentence Scramble',
+                instructions: 'Put the words in the correct order to make a <strong>Past Simple</strong> sentence. Start with a capital letter and end with a full stop (.). <em>(5 points)</em>',
+                example: 'Example: independent / became / Cambodia / 1953. / in <br> -> <strong>Cambodia became independent in 1953.</strong>',
+                type: 'text-input',
+                maxScore: 5,
+                questions: [
+                    { id: 'q5_1', text: 'Cambodia / a / became / kingdom / again .', answer: 'Cambodia became a kingdom again.' },
+                    { id: 'q5_2', text: 'did / the / When / French / arrive ?', answer: 'When did the French arrive?' },
+                    { id: 'q5_3', text: 'built / They / walls / the / city / around .', answer: 'They built walls around the city.' },
+                    { id: 'q5_4', text: 'didn\'t / He / ordinary / live / an / life .', answer: 'He didn\'t live an ordinary life.' },
+                    { id: 'q5_5', text: 'to / moved / The / Phnom Penh / king .', answer: 'The king moved to Phnom Penh.' }
+                ]
+            }
+        ];
+
+        let allSubmissionsCache = [];
+        let currentGradingDocId = null;
+
+        // --- DOM Elements ---
+        const viewHome = document.getElementById('view-home');
+        const viewQuiz = document.getElementById('view-quiz');
+        const viewTeacher = document.getElementById('view-teacher');
+        const navHomeBtn = document.getElementById('btn-nav-home');
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        // Navigation
+        function showView(viewElement) {
+            viewHome.classList.add('hidden');
+            viewQuiz.classList.add('hidden');
+            viewTeacher.classList.add('hidden');
+            viewElement.classList.remove('hidden');
+
+            if (viewElement === viewHome) {
+                navHomeBtn.classList.add('hidden');
+            } else {
+                navHomeBtn.classList.remove('hidden');
+            }
+        }
+
+        navHomeBtn.addEventListener('click', () => showView(viewHome));
+        document.getElementById('btn-start-quiz').addEventListener('click', () => {
+            renderQuizForm();
+            window.scrollTo(0, 0);
+            showView(viewQuiz);
+        });
+
+        // --- Render Quiz Form ---
+        function renderQuizForm() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = ''; 
+
+            quizConfig.forEach((section, sIndex) => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-4';
+                
+                let html = `
+                    <div class="border-b border-slate-100 pb-4 mb-4">
+                        <h3 class="text-xl font-bold text-blue-800">${section.title}</h3>
+                        <p class="text-slate-600 mt-2">${section.instructions}</p>
+                        <div class="bg-blue-50 border border-blue-100 text-blue-800 p-3 rounded-lg mt-3 text-sm">${section.example}</div>
+                    </div>
+                `;
+
+                if (section.passage) {
+                    html += `
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-slate-700 leading-relaxed italic">
+                            "${section.passage}"
+                        </div>
+                    `;
+                }
+
+                if (section.type === 'fill-blank') {
+                    html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">`;
+                    section.questions.forEach((q, i) => {
+                        const parts = q.text.split('{blank}');
+                        html += `
+                            <div class="flex items-center flex-wrap gap-2 py-2">
+                                <span class="font-medium text-slate-500 w-6">${i+1}.</span>
+                                <span>${parts[0]}</span>
+                                <input type="text" data-q-id="${q.id}" class="student-answer w-28 border-b-2 border-slate-300 focus:border-blue-600 outline-none px-2 text-center font-medium text-blue-700 bg-slate-50 rounded-t transition-colors" placeholder="verb">
+                                <span>${parts[1]}</span>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                } 
+                else if (section.type === 'multiple-choice') {
+                    section.questions.forEach((q, i) => {
+                        html += `
+                            <div class="py-3 border-b border-slate-50 last:border-0">
+                                <p class="mb-3"><span class="font-medium text-slate-500 w-6 inline-block">${i+1}.</span>${q.text}</p>
+                                <div class="flex flex-col sm:flex-row gap-3 pl-6">
+                        `;
+                        q.options.forEach(opt => {
+                            html += `
+                                <label class="flex items-center gap-2 cursor-pointer p-3 border border-slate-200 rounded-xl hover:bg-blue-50 transition-colors w-full sm:w-auto">
+                                    <input type="radio" name="radio_${q.id}" value="${opt}" data-q-id="${q.id}" class="student-answer w-4 h-4 text-blue-600 focus:ring-blue-500">
+                                    <span class="font-medium text-slate-700">${opt}</span>
+                                </label>
+                            `;
+                        });
+                        html += `</div></div>`;
+                    });
+                } 
+                else if (section.type === 'text-input') {
+                    section.questions.forEach((q, i) => {
+                        html += `
+                            <div class="py-3">
+                                <p class="mb-2 text-slate-700 font-medium bg-slate-100 inline-block px-3 py-1 rounded-md"><span class="mr-2 text-slate-500">${i+1}.</span>${q.text}</p>
+                                <div class="mt-2 pl-2">
+                                    <input type="text" data-q-id="${q.id}" class="student-answer w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow text-blue-800" placeholder="Type your full sentence here...">
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                sectionDiv.innerHTML = html;
+                container.appendChild(sectionDiv);
+            });
+        }
+
+        // --- Helper for forgiving grading ---
+        function cleanStringForGrading(str) {
+            // Remove all punctuation (except internal apostrophes for didn't/wasn't) and lowercase
+            // This prevents students losing points just for missing a period. 
+            // Teacher can manually dock points for missing periods via dashboard if desired.
+            if (!str) return "";
+            return str.toLowerCase().replace(/[.,?!]/g, '').trim().replace(/\s+/g, ' ');
+        }
+
+        // --- Submit Quiz ---
+        document.getElementById('btn-submit-quiz').addEventListener('click', async () => {
+            const name = document.getElementById('student-name').value.trim();
+            const grade = document.getElementById('student-grade').value.trim();
+
+            if (!name || !grade) {
+                showModal("Missing Information", "Please enter your Full Name and Grade at the top of the page before submitting.");
+                return;
+            }
+
+            // Gather Answers
+            let answers = {};
+            const answerInputs = document.querySelectorAll('.student-answer');
+            answerInputs.forEach(input => {
+                const qId = input.getAttribute('data-q-id');
+                if (input.type === 'radio') {
+                    if (input.checked) answers[qId] = input.value;
+                } else {
+                    answers[qId] = input.value.trim();
+                }
+            });
+
+            // Calculate Auto-Score
+            let autoScore = 0;
+            quizConfig.forEach(section => {
+                section.questions.forEach(q => {
+                    const studentAns = answers[q.id] || "";
+                    
+                    if (section.type === 'text-input' || section.type === 'fill-blank') {
+                        // Forgiving comparison for text inputs
+                        let sClean = cleanStringForGrading(studentAns);
+                        let aClean = cleanStringForGrading(q.answer);
+                        // Also allow alternative apostrophes just in case
+                        sClean = sClean.replace(/’/g, "'");
+                        aClean = aClean.replace(/’/g, "'");
+
+                        if (sClean === aClean) autoScore++;
+                    } else {
+                        // Strict comparison for multiple choice
+                        if (studentAns === q.answer) autoScore++;
+                    }
+                });
+            });
+
+            const maxScore = quizConfig.reduce((acc, curr) => acc + curr.maxScore, 0);
+
+            const payload = {
+                studentName: name,
+                classGrade: grade,
+                answers: answers,
+                status: 'submitted',
+                autoScore: autoScore,
+                finalScore: autoScore, // Initially set to auto
+                maxScore: maxScore
+            };
+
+            loadingOverlay.classList.remove('hidden');
+
+            try {
+                if (isFirebaseReady && auth.currentUser) {
+                    const collectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'submissions');
+                    payload.timestamp = serverTimestamp();
+                    payload.userId = auth.currentUser.uid;
+                    await addDoc(collectionPath, payload);
+                } else {
+                    payload.id = Date.now().toString();
+                    allSubmissionsCache.push(payload);
+                }
+                
+                loadingOverlay.classList.add('hidden');
+                
+                // Reset form
+                document.getElementById('student-name').value = '';
+                document.getElementById('student-grade').value = '';
+                window.scrollTo(0, 0);
+                
+                showModal("Success!", `Excellent job, ${name}! Your exercises have been submitted to your teacher.\n\nPreliminary Auto-Score: ${autoScore} / ${maxScore}.\n\nYou can check back later to see your final graded score.`, () => {
+                    showView(viewHome);
+                });
+
+            } catch (error) {
+                loadingOverlay.classList.add('hidden');
+                console.error("Error submitting:", error);
+                showModal("Error", "There was a problem submitting your quiz. Please try again.");
+            }
+        });
+
+        // --- Check Score Logic ---
+        document.getElementById('btn-check-score').addEventListener('click', () => {
+            showInputModal("Check Score", "Enter your exact full name to find your submission:", "Student Name", async (inputName) => {
+                if(!inputName) return;
+                loadingOverlay.classList.remove('hidden');
+                await fetchAllSubmissions(); 
+                loadingOverlay.classList.add('hidden');
+
+                const studentDocs = allSubmissionsCache.filter(doc => doc.studentName.toLowerCase() === inputName.toLowerCase());
+                
+                if (studentDocs.length === 0) {
+                    showModal("Not Found", `No submission found for "${inputName}". Ensure the spelling is exactly as you typed it when you submitted.`);
+                } else {
+                    studentDocs.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                    const latest = studentDocs[0];
+                    
+                    let msg = `Found submission for <strong>${latest.studentName}</strong> (${latest.classGrade}).<br><br>`;
+                    msg += `Status: <strong>${latest.status === 'graded' ? '<span class="text-green-600 bg-green-50 px-2 py-1 rounded">Graded by Teacher</span>' : '<span class="text-orange-500 bg-orange-50 px-2 py-1 rounded">Awaiting Teacher Review</span>'}</strong><br><br>`;
+                    
+                    if (latest.status === 'graded') {
+                        msg += `Final Score: <span class="text-3xl font-bold text-blue-600">${latest.finalScore} / ${latest.maxScore}</span>`;
+                    } else {
+                        msg += `Preliminary Auto-Score: <span class="font-bold">${latest.autoScore} / ${latest.maxScore}</span>`;
+                    }
+                    
+                    showModal("Your Results", msg);
+                }
+            });
+        });
+
+        // --- Teacher Logic ---
+        document.getElementById('btn-teacher-login').addEventListener('click', () => {
+            showInputModal("Teacher Access", "Please enter the teacher passcode (Hint: type TEACHER2026):", "Passcode", (pwd) => {
+                if (pwd === 'TEACHER2026') {
+                    loadTeacherDashboard();
+                } else {
+                    showModal("Access Denied", "Incorrect passcode.");
+                }
+            });
+        });
+
+        document.getElementById('btn-teacher-refresh').addEventListener('click', loadTeacherDashboard);
+
+        async function fetchAllSubmissions() {
+            if (isFirebaseReady && auth.currentUser) {
+                try {
+                    const collectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'submissions');
+                    const snapshot = await getDocs(collectionPath);
+                    allSubmissionsCache = [];
+                    snapshot.forEach(doc => {
+                        allSubmissionsCache.push({ id: doc.id, ...doc.data() });
+                    });
+                } catch (e) {
+                    console.error("Error fetching docs", e);
+                }
+            }
+        }
+
+        async function loadTeacherDashboard() {
+            showView(viewTeacher);
+            loadingOverlay.classList.remove('hidden');
+            
+            await fetchAllSubmissions();
+            
+            const tbody = document.getElementById('teacher-submissions-list');
+            const emptyState = document.getElementById('teacher-empty-state');
+            tbody.innerHTML = '';
+            
+            if (allSubmissionsCache.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                
+                allSubmissionsCache.sort((a,b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                allSubmissionsCache.forEach(sub => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0';
+                    
+                    const statusBadge = sub.status === 'graded' 
+                        ? `<span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-bold border border-green-200 shadow-sm">Graded (${sub.finalScore}/${sub.maxScore})</span>`
+                        : `<span class="bg-orange-100 text-orange-800 text-xs px-3 py-1 rounded-full font-bold border border-orange-200 shadow-sm">Needs Review</span>`;
+
+                    tr.innerHTML = `
+                        <td class="py-4 px-6 font-bold text-slate-800">${sub.studentName}</td>
+                        <td class="py-4 px-6 text-slate-600 font-medium">${sub.classGrade}</td>
+                        <td class="py-4 px-6">${statusBadge}</td>
+                        <td class="py-4 px-6 text-right">
+                            <button class="btn-grade text-white font-medium px-4 py-2 rounded-lg shadow-sm transition-colors ${sub.status === 'graded' ? 'bg-slate-600 hover:bg-slate-700' : 'bg-blue-600 hover:bg-blue-700'}" data-id="${sub.id}">
+                                ${sub.status === 'graded' ? 'Review / Edit' : 'Grade Now'}
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                document.querySelectorAll('.btn-grade').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const subId = e.target.getAttribute('data-id');
+                        openGradingModal(subId);
+                    });
+                });
+            }
+            loadingOverlay.classList.add('hidden');
+        }
+
+        // --- Grading Modal ---
+        const modalGrading = document.getElementById('modal-grading');
+        
+        function openGradingModal(subId) {
+            const sub = allSubmissionsCache.find(s => s.id === subId);
+            if(!sub) return;
+            
+            currentGradingDocId = subId;
+            document.getElementById('grading-modal-title').innerText = `Grading: ${sub.studentName} (${sub.classGrade})`;
+            
+            const content = document.getElementById('grading-modal-content');
+            let html = '';
+
+            quizConfig.forEach(section => {
+                html += `
+                    <div class="mb-8 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+                            <h4 class="font-bold text-lg text-blue-800">${section.title}</h4>
+                            <span class="text-sm font-medium text-slate-400">Max: ${section.maxScore} pts</span>
+                        </div>
+                `;
+                
+                section.questions.forEach((q, i) => {
+                    const studentAnsRaw = sub.answers[q.id] || "";
+                    const studentAnsDisplay = studentAnsRaw || "<em>(left blank)</em>";
+                    
+                    let isExactMatch = false;
+                    if(section.type === 'text-input' || section.type === 'fill-blank') {
+                        isExactMatch = cleanStringForGrading(studentAnsRaw) === cleanStringForGrading(q.answer);
+                    } else {
+                        isExactMatch = studentAnsRaw === q.answer;
+                    }
+                    
+                    const statusIcon = isExactMatch ? '✅' : '❌';
+                    const bgClass = isExactMatch ? 'bg-green-50/50 border-green-200' : 'bg-red-50/50 border-red-200';
+
+                    html += `
+                        <div class="mb-4 p-4 rounded-xl border ${bgClass}">
+                            <p class="text-sm font-medium text-slate-700 mb-2">${i+1}. ${q.text}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 bg-white/60 p-3 rounded-lg">
+                                <div>
+                                    <p class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-1">Student Answer</p>
+                                    <p class="font-medium ${isExactMatch ? 'text-green-700' : 'text-red-700'}">${studentAnsDisplay} <span class="ml-1">${statusIcon}</span></p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-1">Correct Key</p>
+                                    <p class="text-slate-800 font-medium">${q.answer}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            });
+
+            content.innerHTML = html;
+            
+            document.getElementById('grading-final-score').value = sub.finalScore;
+            
+            modalGrading.classList.remove('hidden');
+        }
+
+        document.querySelectorAll('.close-grading-modal').forEach(btn => {
+            btn.addEventListener('click', () => modalGrading.classList.add('hidden'));
+        });
+
+        document.getElementById('btn-save-grade').addEventListener('click', async () => {
+            const finalScore = parseInt(document.getElementById('grading-final-score').value);
+            if (isNaN(finalScore)) return;
+
+            loadingOverlay.classList.remove('hidden');
+            try {
+                if (isFirebaseReady && currentGradingDocId && currentGradingDocId.length > 10) { 
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'submissions', currentGradingDocId);
+                    await updateDoc(docRef, {
+                        finalScore: finalScore,
+                        status: 'graded'
+                    });
+                } else {
+                    const idx = allSubmissionsCache.findIndex(s => s.id === currentGradingDocId);
+                    if (idx > -1) {
+                        allSubmissionsCache[idx].finalScore = finalScore;
+                        allSubmissionsCache[idx].status = 'graded';
+                    }
+                }
+                modalGrading.classList.add('hidden');
+                await loadTeacherDashboard();
+            } catch(e) {
+                console.error("Error saving grade", e);
+                showModal("Error", "Could not save grade.");
+            }
+            loadingOverlay.classList.add('hidden');
+        });
+
+        // --- Custom Modal System ---
+        const modalGeneric = document.getElementById('modal-generic');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalInput = document.getElementById('modal-input');
+        const btnModalAction = document.getElementById('btn-modal-action');
+        const btnModalCancel = document.getElementById('btn-modal-cancel');
+        let currentModalCallback = null;
+
+        function showModal(title, message, callback = null) {
+            modalTitle.innerHTML = title;
+            // Using innerHTML to allow bold tags in messages
+            modalMessage.innerHTML = message.replace(/\n/g, '<br>'); 
+            modalInput.classList.add('hidden');
+            btnModalCancel.classList.add('hidden');
+            btnModalAction.innerText = "OK";
+            
+            currentModalCallback = callback;
+            modalGeneric.classList.remove('hidden');
+        }
+
+        function showInputModal(title, message, placeholder, callback) {
+            modalTitle.innerHTML = title;
+            modalMessage.innerHTML = message;
+            modalInput.value = '';
+            modalInput.placeholder = placeholder;
+            modalInput.classList.remove('hidden');
+            btnModalCancel.classList.remove('hidden');
+            btnModalAction.innerText = "Submit";
+            
+            currentModalCallback = (val) => callback(val);
+            modalGeneric.classList.remove('hidden');
+            setTimeout(() => modalInput.focus(), 100);
+        }
+
+        btnModalAction.addEventListener('click', () => {
+            modalGeneric.classList.add('hidden');
+            if (currentModalCallback) {
+                const val = !modalInput.classList.contains('hidden') ? modalInput.value.trim() : null;
+                currentModalCallback(val);
+                currentModalCallback = null;
+            }
+        });
+
+        btnModalCancel.addEventListener('click', () => {
+            modalGeneric.classList.add('hidden');
+            currentModalCallback = null;
+        });
+
+        // Init App
+        window.addEventListener('DOMContentLoaded', () => {
+            initFirebase();
+        });
+
+    </script>
+</body>
+</html>
